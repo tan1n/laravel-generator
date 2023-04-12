@@ -158,7 +158,7 @@ class BaseCommand extends Command
                 $requestFromConsole = (php_sapi_name() == 'cli');
                 if ($this->option('jsonFromGUI') && $requestFromConsole) {
                     $this->runMigration();
-                } elseif ($requestFromConsole && $this->confirm(infy_nl().'Do you want to migrate database? [y|N]', false)) {
+                } elseif ($requestFromConsole && $this->confirm(infy_nl() . 'Do you want to migrate database? [y|N]', false)) {
                     $this->runMigration();
                 }
             }
@@ -219,18 +219,18 @@ class BaseCommand extends Command
         foreach ($this->config->relations as $relation) {
             $fileFields[] = [
                 'type'     => 'relation',
-                'relation' => $relation->type.','.implode(',', $relation->inputs),
+                'relation' => $relation->type . ',' . implode(',', $relation->inputs),
             ];
         }
 
         $path = config('laravel_generator.path.schema_files', resource_path('model_schemas/'));
 
-        $fileName = $this->config->modelNames->name.'.json';
+        $fileName = $this->config->modelNames->name . '.json';
 
-        if (file_exists($path.$fileName) && !$this->confirmOverwrite($fileName)) {
+        if (file_exists($path . $fileName) && !$this->confirmOverwrite($fileName)) {
             return;
         }
-        g_filesystem()->createFile($path.$fileName, json_encode($fileFields, JSON_PRETTY_PRINT));
+        g_filesystem()->createFile($path . $fileName, json_encode($fileFields, JSON_PRETTY_PRINT));
         $this->comment("\nSchema File saved: ");
         $this->info($fileName);
     }
@@ -249,16 +249,16 @@ class BaseCommand extends Command
 
         $path = lang_path('en/models/');
 
-        $fileName = $this->config->modelNames->snakePlural.'.php';
+        $fileName = $this->config->modelNames->snakePlural . '.php';
 
-        if (file_exists($path.$fileName) && !$this->confirmOverwrite($fileName)) {
+        if (file_exists($path . $fileName) && !$this->confirmOverwrite($fileName)) {
             return;
         }
 
         $locales = VarExporter::export($locales);
-        $end = ';'.infy_nl();
-        $content = "<?php\n\nreturn ".$locales.$end;
-        g_filesystem()->createFile($path.$fileName, $content);
+        $end = ';' . infy_nl();
+        $content = "<?php\n\nreturn " . $locales . $end;
+        g_filesystem()->createFile($path . $fileName, $content);
         $this->comment("\nModel Locale File saved.");
         $this->info($fileName);
     }
@@ -266,7 +266,7 @@ class BaseCommand extends Command
     protected function confirmOverwrite(string $fileName, string $prompt = ''): bool
     {
         $prompt = (empty($prompt))
-            ? $fileName.' already exists. Do you want to overwrite it? [y|N]'
+            ? $fileName . ' already exists. Do you want to overwrite it? [y|N]'
             : $prompt;
 
         return $this->confirm($prompt, false);
@@ -293,6 +293,7 @@ class BaseCommand extends Command
             ['relations', null, InputOption::VALUE_NONE, 'Specify if you want to pass relationships for fields'],
             ['forceMigrate', null, InputOption::VALUE_NONE, 'Specify if you want to run migration or not'],
             ['connection', null, InputOption::VALUE_REQUIRED, 'Specify connection name'],
+            ['config', null, InputOption::VALUE_REQUIRED, 'Specify the module config path']
         ];
     }
 
@@ -418,7 +419,7 @@ class BaseCommand extends Command
                 'laravel_generator.path.schema_files',
                 resource_path('model_schemas/')
             );
-            $filePath = $schemaFileDirector.$fieldsFileValue;
+            $filePath = $schemaFileDirector . $fieldsFileValue;
         }
 
         if (!file_exists($filePath)) {
